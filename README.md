@@ -1,2 +1,3 @@
-# Projekt
-lol
+# Finalní projekt Václava Raidy
+
+
