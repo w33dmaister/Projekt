@@ -7,3 +7,6 @@ Zatím věci co vím, že potřebuju:
     -dvě ledky
     -dva snímače
     -Arduino na to vhodné
+
+
+reference na funkci: https://www.youtube.com/watch?v=B-l3tgJUTPA
