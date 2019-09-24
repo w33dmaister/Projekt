@@ -45,3 +45,141 @@ void loop(void)
     
   }
 }
+
+
+
+
+
+//pin definitions
+#define RXA 12
+#define RXB 10
+#define TX 11
+
+
+
+//variables
+
+int timerA = 0;
+
+//flag
+boolean hitA = true;
+boolean hitB = true;
+
+boolean leave = false;
+
+boolean transmitting_IR;
+boolean receiving_IR;
+
+void turn_off_IR ()
+{
+  // Instead of just adjusting the output on pin 11, this code also
+  //   turns off the timer controlling the PWM output on pin 11
+  
+  TCCR2A = 0; // Disconnect PWM
+  TCCR2B = 0; // Stops the timer
+  OCR2A = 0;  // No timer top
+  digitalWrite(11, LOW);  // Ensure output is off
+  
+  transmitting_IR = false;
+}
+
+void turn_on_IR ()
+{
+// Set up Timer2 (which can be connected to pins 3 and 11)
+  // For full details, see:
+  //   arduino.cc/en/Tutorial/SecretsOfArduinoPWM
+  // The syntax here has me baffled, but the patterns of usage
+  //   are clear if you look at the ATMega328 diagrams.
+  //   _BV appears to stand for 'bit value'
+  //   Different bits need to be set to control each timer
+  //   Refer to diagrams for clarity
+
+  TCCR2A = _BV(WGM21) | _BV(COM2A0); // This mode toggles output once per timer cycle
+  TCCR2B = _BV(CS20);  // Do not scale the clock down - use 16 MHz timer rate.
+  OCR2A = 210; // Divide sys. clock by 210, 1/2 cycle = 76 khz, 1 cycle = 38 khz
+  
+  // Output pin 11 should now be emitting a 38 khz signal.
+  
+  transmitting_IR = true;
+}
+
+
+void detectIR()
+{
+  // Determine if we are receiving an IR signal.
+  //   if pin RXA is false = receiving
+  //   if pin RXA is true = not receiving
+  
+  if(digitalRead(RXA)){
+    //Serial.println("missA");
+    hitA = false;
+  }else{
+    hitA = true;
+  }
+  
+  delay(1);
+  
+  if(digitalRead(RXB)){
+    //Serial.println("missB");
+    hitB = false;
+  }else{
+    hitB = true;
+  }
+}
+
+
+void pulseIR(){
+  //manage the IR transmitter
+  if (transmitting_IR)
+    turn_off_IR();
+  
+  if (!transmitting_IR)
+    turn_on_IR();     
+}
+
+
+
+void checkA(){
+  //RX routine
+  if(leave == false){ //
+    if(hitA == false && hitB == true){ // if the RXA beam has been broken
+   // The coin is rolling from A to B  
+            leave = true; // set the passing flag 
+            timerA=millis(); // start the timer
+          }
+      }
+  }
+
+
+void checkB(){
+  if(leave == true){ //if the coin is rolling from A to V
+    if(hitB == false && hitA == true){ // and the coin break the B beam
+          
+            leave=false; // reset the rolling flag
+            int now = millis();
+            int time = now - timerA; //compute the time
+            Serial.println(time);
+            Serial.println("-----------------------------------");
+            delay(1000);
+      
+  }
+}
+}
+
+
+void setup(){  
+  pinMode(RXA, INPUT);
+  pinMode(TX, OUTPUT);
+  pinMode(RXB, INPUT);  
+  Serial.begin(9600);
+  Serial.println("Ready!");
+  pulseIR();
+  delay(100);
+}
+
+void loop(){
+  pulseIR(); // transmit cycle
+  detectIR(); // search for IR
+  checkA(); // check A IR sensor
+  checkB(); // check B IR sensor
+}
