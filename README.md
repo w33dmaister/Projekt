@@ -1,7 +1,7 @@
 # Čítač nábojů na airsoftové pušce
 Projekt Václava Raidy
 
-Projekt bude zahrnovat nástavec na hlaveň mojí airsoftové pušky, který bude sledovat jestli jím proletí projektil a podle toho mi na displeji na těle zbrani.
+Projekt bude zahrnovat nástavec na hlaveň mojí airsoftové pušky, který bude sledovat jestli jím proletí projektil a podle toho mi na displeji na těle zbrani bude počítat počet kuliček v zásobníku.
 
 Zatím věci co vím, že potřebuju:
     -dvě ledky
