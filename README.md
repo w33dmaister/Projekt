@@ -10,3 +10,4 @@ Zatím věci co vím, že potřebuju:
 
 
 reference na funkci: https://www.youtube.com/watch?v=B-l3tgJUTPA
+reference na součástky co nejspíš použiju: https://www.adafruit.com/product/2167
