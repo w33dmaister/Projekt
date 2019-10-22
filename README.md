@@ -3,11 +3,7 @@ Projekt Václava Raidy
 
 Projekt bude zahrnovat nástavec na hlaveň mojí airsoftové pušky, který bude sledovat jestli jím proletí projektil a podle toho mi na displeji na těle zbrani bude počítat počet kuliček v zásobníku.
 
-Zatím věci co vím, že potřebuju:
-    -dvě ledky
-    -dva snímače
-    -Arduino na to vhodné
-
+Zatím jsem odzkoušel několik zkušebních zapojení a vyzkoušel několik jednoduchých kódů na odzkoušení svých součástek a možností. 
 
 reference na funkci: https://www.youtube.com/watch?v=B-l3tgJUTPA                                                                
 reference na součástky co nejspíš použiju: https://www.adafruit.com/product/2167
