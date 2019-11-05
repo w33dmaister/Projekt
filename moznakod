@@ -47,7 +47,7 @@ void loop(void)
 }
 
 
-
+//////////////////////////////
 
 
 //pin definitions
@@ -182,4 +182,48 @@ void loop(){
   detectIR(); // search for IR
   checkA(); // check A IR sensor
   checkB(); // check B IR sensor
+}
+
+
+
+
+//////////////////////////////
+
+
+
+// measures velocity of projectiles
+// projectile breaks foil strips 218 mm apart
+
+#include <LiquidCrystal.h>
+
+LiquidCrystal lcd(3,5,9,10,11,12);
+unsigned long start=0, finish=0;
+int startPin=4, finishPin=8, done=0;
+float distance=218.0, interval, velocity;
+
+void setup() {
+  lcd.begin(16, 2);
+  lcd.setCursor(0, 0);
+  lcd.print("Muzzle Velocity");
+  pinMode(startPin, INPUT_PULLUP);
+  pinMode(finishPin, INPUT_PULLUP);
+}
+
+void loop() {
+  while(!start) {
+    if(digitalRead(startPin) == HIGH)
+      start = micros();
+  }
+  while(!finish) {
+    if(digitalRead(finishPin) == HIGH)
+      finish = micros();
+  }
+  while(!done) {
+    interval = float(finish-start);
+    velocity = distance*1000*3.28/interval;
+    lcd.setCursor(0, 1);
+    lcd.print(velocity);
+    lcd.print(" ft/sec");
+    done = 1;
+  }
 }
