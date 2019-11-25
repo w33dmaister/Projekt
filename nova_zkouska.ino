@@ -24,16 +24,18 @@ void loop(){
   // if it is, the sensorState is LOW:
  
   while(time1 == 0) {
-    if(digitalRead(PRVNIPIN) == LOW)
+    if(digitalRead(PRVNIPIN) == LOW){
       time1 = micros();
       pocet--;
+    }
   }
   while(time2 == 0) {
-    if(digitalRead(DRUHYPIN) == LOW)
+    if(digitalRead(DRUHYPIN) == LOW){
       time2 = micros();
       zmereno = 1;
+    }
   }
-  while(zmereno == 1){
+  if(mereno == 1){
     /*interval = float(time2-time1);
     velocity = distance*1000*3.28/interval;
     Serial.println(velocity);*/
