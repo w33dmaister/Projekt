@@ -6,12 +6,25 @@
 // variables will change:
 volatile byte prvniState = HIGH, druhyState = HIGH;       // variable for reading the pushbutton status
 int pocet = 500, zmereno = 0;
-unsigned long time1 = 0, time2 = 0;
+unsigned long time1 = 0, time2 = 0, mezicas1 = 0, mezicas2 = 0, oldtime1 = 0, oldtime2 = 0;
 float distance = 100.0, interval = 0, velocity = 0;
 
 
 void inter1() {
+  oldtime1 = millis();
+  if((mezicas1 + 10) < oldtime1){
      pocet++;
+     time1 = millis();
+  }
+  mezicas1 = oldtime1;
+}
+
+void inter2() {
+   oldtime2 = millis();
+  if((mezicas2 + 10) < oldtime2){
+     time2 = millis();
+  }
+  mezicas2 = oldtime2;  
 }
 
 void setup() {
@@ -19,14 +32,14 @@ void setup() {
   //pinMode(LEDPIN, OUTPUT);      
   // initialize the sensor pin as an input:
   pinMode(PRVNIPIN, INPUT);
-  pinMode(DRUHYPIN, INPUT_PULLUP);     
+  pinMode(DRUHYPIN, INPUT);     
   /*digitalWrite(PRVNIPIN, HIGH); // turn on the pullup
   digitalWrite(DRUHYPIN, HIGH);*/
-  attachInterrupt(digitalPinToInterrupt(PRVNIPIN), inter1, CHANGE);
-  //attachInterrupt(digitalPinToInterrupt(DRUHYPIN), inter2,  CHANGE);
+  attachInterrupt(digitalPinToInterrupt(PRVNIPIN), inter1, RISING);
+  attachInterrupt(digitalPinToInterrupt(DRUHYPIN), inter2, RISING);
   Serial.begin(9600);
 }
- int zmena = 0;
+int zmena = 0;
 void loop(){
   // read the state of the pushbutton value:
   // check if the sensor beam is broken
@@ -47,23 +60,23 @@ void loop(){
     }
   }
   */
-  if(zmereno == 1){
-    /*interval = float(time2-time1);
+  /*if(zmereno == 1){
+    interval = float(time2-time1);
     velocity = distance*1000*3.28/interval;
-    Serial.println(velocity);*/
+    Serial.println(velocity);
     Serial.println(pocet);
     time1 = 0;
     time2 = 0;
     zmereno = 0;
-    }
+    }*/
     
     if (pocet != zmena){
-    Serial.println(pocet );
-    zmena = pocet; 
+      Serial.println(pocet);
+      zmena = pocet;
+      interval = float(time2-time1);
+      velocity = float((distance*1000)*3.28)/interval;
+      Serial.println(velocity); 
     }
  }
 
 
-void inter2() {
-     druhyState = !druhyState;
-}
