@@ -1,4 +1,6 @@
 #include <Arduino.h>
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
 
 #define PRVNIPIN 2
 #define DRUHYPIN 3
@@ -8,6 +10,7 @@ volatile byte prvniState = HIGH, druhyState = HIGH;       // variable for readin
 int pocet = 500, zmereno = 0;
 unsigned long time1 = 0, time2 = 0, mezicas1 = 0, mezicas2 = 0, oldtime1 = 0, oldtime2 = 0;
 float distance = 100.0, interval = 0, velocity = 0;
+LiquidCrystal_I2C lcd(0x20,16,2); 
 
 
 void inter1() {
@@ -33,10 +36,13 @@ void setup() {
   // initialize the sensor pin as an input:
   pinMode(PRVNIPIN, INPUT);
   pinMode(DRUHYPIN, INPUT);     
+  lcd.begin();// inicializuje displej
+  lcd.backlight();
   /*digitalWrite(PRVNIPIN, HIGH); // turn on the pullup
   digitalWrite(DRUHYPIN, HIGH);*/
   attachInterrupt(digitalPinToInterrupt(PRVNIPIN), inter1, RISING);
   attachInterrupt(digitalPinToInterrupt(DRUHYPIN), inter2, RISING);
+  lcd.print(pocet);
   Serial.begin(9600);
 }
 int zmena = 0;
@@ -72,10 +78,14 @@ void loop(){
     
     if (pocet != zmena){
       Serial.println(pocet);
+      lcd.setCursor(0,0);
+      lcd.print(pocet);
       zmena = pocet;
       interval = float(time2-time1);
       velocity = float((distance*1000)*3.28)/interval;
-      Serial.println(velocity); 
+      Serial.println(velocity);
+      lcd.setCursor(0,1);
+      lcd.print(velocity);
     }
  }
 
